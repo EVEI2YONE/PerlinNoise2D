@@ -16,10 +16,12 @@ import java.util.List;
 import java.util.Random;
 
 public class main extends Application {
-    int rows = 800,
-        cols = 800;
-    PerlinNoise[][] table = new PerlinNoise[rows/25][cols/25];
-
+    int rows = 600,
+        cols = 450;
+    int rDim = 600/2;
+    int cDim = 450/3;
+    PerlinNoise[][] table;// = new PerlinNoise[rows/rDim][cols/cDim];
+    Random rand = new Random();
     @Override
     public void start(Stage stage) throws Exception {
         VBox root = new VBox();
@@ -27,6 +29,7 @@ public class main extends Application {
         canvas = new Canvas(rows, cols);
         b.setOnAction(e -> {
             Platform.runLater(() -> {
+                initTable();
                 run();
             });
         });
@@ -37,6 +40,9 @@ public class main extends Application {
         stage.show();
     }
     public void initTable() {
+        table = new PerlinNoise[rows/rDim][cols/cDim];
+        xgridlen = cols/table[0].length;
+        ygridlen = rows/table.length;
         //initialize tables
         for(int i = 0; i < table.length; i++) {
             for(int j = 0 ; j < table[0].length; j++) {
@@ -58,12 +64,11 @@ public class main extends Application {
         }
     }
 
-    double xgridlen = cols/table[0].length;
-    double ygridlen = rows/table.length;
+    double xgridlen;// = cols/table[0].length;
+    double ygridlen;// = rows/table.length;
 
     Canvas canvas;
     public void run() {
-        initTable();
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setStroke(Color.BLACK);
 
@@ -84,6 +89,7 @@ public class main extends Application {
     public int getColor(double scale) {
         scale += 1;
         return (int)Math.round(255.0/2.0*scale);
+        //return rand.nextInt(255);
     }
 
     public int[] calcPoints() {
@@ -102,16 +108,16 @@ public class main extends Application {
     }
 
     public double getx(int j) {
-        return (j%xgridlen)/xgridlen;
+        return ((j-(j/xgridlen))%xgridlen)/xgridlen;
     }
     public double gety(int i) {
-        return (i%ygridlen)/ygridlen;
+        return ((i-(i/ygridlen))%ygridlen)/ygridlen;
     }
     public int getxgrid(int j) {
-        return (int)(j/xgridlen);
+        return (int)((j-(j/xgridlen))/xgridlen);
     }
     public int getygrid(int i) {
-        return (int)(i/ygridlen);
+        return (int)((i-(i/ygridlen))/ygridlen);
     }
 
     public static void main(String[] args) {

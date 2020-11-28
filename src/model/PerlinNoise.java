@@ -8,6 +8,10 @@ public class PerlinNoise {
     double rows = 25;
     double cols = 25;
 
+    public void setDim(double row, double col) {
+        rows = row;
+        cols = col;
+    }
     public GradientPoint topleft, topright, bottomleft, bottomright;
 
     public PerlinNoise(int rows, int cols) {
