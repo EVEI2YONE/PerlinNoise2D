@@ -8,8 +8,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.PerlinNoise;
-import model.PerlinNoise2D;
-import model.TestPerlin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +16,8 @@ import java.util.Random;
 public class main extends Application {
     int rows = 600,
         cols = 450;
-    int rDim = 600/2;
-    int cDim = 450/3;
+    int rDim = rows/10,
+        cDim = cols/10;
     PerlinNoise[][] table;// = new PerlinNoise[rows/rDim][cols/cDim];
     Random rand = new Random();
     @Override
@@ -27,10 +25,12 @@ public class main extends Application {
         VBox root = new VBox();
         Button b = new Button("run");
         canvas = new Canvas(rows, cols);
+        initTable();
         b.setOnAction(e -> {
             Platform.runLater(() -> {
-                initTable();
                 run();
+                createGrid();
+                checkConnections();
             });
         });
         root.getChildren().addAll(b, canvas);
@@ -43,12 +43,21 @@ public class main extends Application {
         table = new PerlinNoise[rows/rDim][cols/cDim];
         xgridlen = cols/table[0].length;
         ygridlen = rows/table.length;
+
+        createGrid();
+        checkConnections();
+    }
+
+    public void createGrid() {
         //initialize tables
         for(int i = 0; i < table.length; i++) {
             for(int j = 0 ; j < table[0].length; j++) {
                 table[i][j] = new PerlinNoise();
             }
         }
+    }
+
+    public void checkConnections() {
         //check connections
         for(int i = 0; i < table.length; i++) {
             for(int j = 0 ; j < table[0].length; j++) {
@@ -71,9 +80,6 @@ public class main extends Application {
     public void run() {
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setStroke(Color.BLACK);
-
-//        int[] xPoints = calcPoints();
-//        int[] yPoints = calcPoints();
 
         int xgrid, ygrid;
         for(int i = 0; i < rows; i++) {

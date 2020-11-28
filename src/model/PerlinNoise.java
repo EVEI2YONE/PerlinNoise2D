@@ -4,22 +4,12 @@ import java.util.Random;
 
 public class PerlinNoise {
     Random rand;
-    double[] opt = {1, -1};
-    double rows = 25;
-    double cols = 25;
 
-    public void setDim(double row, double col) {
-        rows = row;
-        cols = col;
-    }
     public GradientPoint topleft, topright, bottomleft, bottomright;
 
-    public PerlinNoise(int rows, int cols) {
-        this.rows = rows;
-        this.cols = cols;
+    public PerlinNoise() {
         init();
     }
-    public PerlinNoise() { init(); }
     public void init() {
         topleft = new GradientPoint();
         topright = new GradientPoint();
@@ -69,15 +59,8 @@ public class PerlinNoise {
     public double interpolate(double start, double end, double val) {
         return start + val*(end-start);
     }
-
     public double dot(double x1, double y1, double x2, double y2) {
         return x1*x2 + y1*y2;
-    }
-
-    public void newSeed(int x, int y) {
-        rand = new Random(x);
-        rand = new Random(rand.nextInt()+y);
-        rand = new Random(rand.nextInt()+x*y);
     }
 
     public Point newPoint() {
@@ -85,8 +68,5 @@ public class PerlinNoise {
         double x = Math.cos(angle);
         double y = Math.sin(angle);
         return new Point(x, y);
-    }
-    public double choose() {
-        return opt[rand.nextInt(2)];
     }
 }
