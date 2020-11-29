@@ -1,11 +1,10 @@
-package model;
+package perlin;
 
-import com.sun.prism.paint.Gradient;
+import perlin.PerlinNoise.GradientType;
 
 import java.util.Random;
 
 public class PerlinNoiseGrid {
-    public enum GradientType { CROSS, PLUS, RANDOM }
     public static GradientType gtype = GradientType.CROSS;
     static Random rand = new Random(1);
 
@@ -81,7 +80,7 @@ public class PerlinNoiseGrid {
             return new Point(x, y);
         else if(gtype == GradientType.CROSS)
             return new Point(choose(), choose());
-        else
+        else // gtype == GradientType.PLUS
             return crossPoint();
     }
 

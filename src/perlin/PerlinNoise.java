@@ -1,9 +1,15 @@
-package model;
+package perlin;
 
 public class PerlinNoise {
+    public void setGradient(GradientType type) {
+        PerlinNoiseGrid.gtype = type;
+        init();
+    }
+
+    public enum GradientType { CROSS, PLUS, RANDOM }
     private int
-        width = 700,
-        height = 550;
+        width = 1000,
+        height = 1000;
     private int
         wgrids = 32,
         hgrids = 32;
@@ -80,6 +86,20 @@ public class PerlinNoise {
     private double ygridlen;// = rows/table.length;
 
     public double noise(int i, int j) {
+        boolean outX = (j / width) > 0;
+        boolean outY = (i / height) > 0;
+        if(outX) {
+            if(j / width % 2 == 0)
+                j = (j % width);
+            else
+                j = width-1 - (j % width);
+        }
+        if(outY) {
+            if(i / height % 2 == 0)
+                i = (i % height);
+            else
+                i = height-1 - (i % height);
+        }
         int xgrid = getxgrid(j);
         int ygrid = getygrid(i);
         double x = getx(j);

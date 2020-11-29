@@ -1,4 +1,4 @@
-package model;
+package perlin;
 
 public class GradientPoint {
     public

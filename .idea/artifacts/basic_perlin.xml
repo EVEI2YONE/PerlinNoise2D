@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="basic.perlin">
+    <output-path>$PROJECT_DIR$/out/artifacts/basic_perlin</output-path>
+    <root id="archive" name="basic.perlin.jar">
+      <element id="module-output" name="PerlinNoise2D" />
+    </root>
+  </artifact>
+</component>
