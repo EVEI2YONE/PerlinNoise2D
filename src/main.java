@@ -9,31 +9,38 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.GradientPoint;
 import model.PerlinNoise;
-import model.Point;
+import model.PerlinNoiseGrid;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class main extends Application {
-    int width = 600,
-        height = 450;
+    int width = 700,
+        height = 550;
     int
-        wDim = width/(width/100),
-        hDim = height/(height/150);
-    PerlinNoise[][] table;// = new PerlinNoise[rows/rDim][cols/cDim];
+        wDim = width/32,
+        hDim = height/32;
+    PerlinNoiseGrid[][] table;// = new PerlinNoise[rows/rDim][cols/cDim];
+
+    int wGrids = 32,
+        hGrids = 32;
+    PerlinNoise perlin = new PerlinNoise();
+
     @Override
     public void start(Stage stage) throws Exception {
+        perlin.setDimension(width, height);
+        perlin.setGridDimension(wGrids, hGrids);
+
         VBox root = new VBox();
         Button b = new Button("run");
         canvas = new Canvas(width, height);
-        initTable();
+        //initTable();
         b.setOnAction(e -> {
             Platform.runLater(() -> {
-                createGrid();
-                checkConnections();
+//                createGrid();
+//                checkConnections();
                 run();
-                parseGradientVectors();
+                //parseGradientVectors();
             });
         });
         root.getChildren().addAll(b, canvas);
@@ -48,7 +55,7 @@ public class main extends Application {
             hOff = 1;
         if(width % wDim > 0)
             wOff = 1;
-        table = new PerlinNoise[height/hDim + hOff][width/wDim + wOff];
+        table = new PerlinNoiseGrid[height/hDim + hOff][width/wDim + wOff];
         xgridlen = width/(table[0].length-wOff);
         ygridlen = height/(table.length-hOff);
     }
@@ -57,7 +64,7 @@ public class main extends Application {
         //initialize tables
         for(int i = 0; i < table.length; i++) {
             for(int j = 0 ; j < table[0].length; j++) {
-                table[i][j] = new PerlinNoise();
+                table[i][j] = new PerlinNoiseGrid();
             }
         }
     }
@@ -83,21 +90,30 @@ public class main extends Application {
     Canvas canvas;
     public void run() {
         GraphicsContext g = canvas.getGraphicsContext2D();
-        g.setStroke(Color.BLACK);
-
-        int xgrid, ygrid;
+        double scl;
+        int col;
+        perlin.generateNoise();
         for(int i = 0; i < height; i++) {
             for(int j = 0; j < width; j++) {
-                xgrid = getxgrid(j);
-                ygrid = getygrid(i);
-                double x = getx(j);
-                double y = gety(i);
-                double scl = table[ygrid][xgrid].noise(y, x);
-                int col = getColor(scl);
+                scl = perlin.noise(i, j);
+                col = (int)(255*scl);
                 g.setFill(Color.rgb(col, col, col));
-                g.fillRect(j, i, 1, 1);
+                g.fillRect(i, j, 1, 1);
             }
         }
+//        int xgrid, ygrid;
+//        for(int i = 0; i < height; i++) {
+//            for(int j = 0; j < width; j++) {
+//                xgrid = getxgrid(j);
+//                ygrid = getygrid(i);
+//                double x = getx(j);
+//                double y = gety(i);
+//                double scl = table[ygrid][xgrid].noise(y, x);
+//                int col = getColor(scl);
+//                g.setFill(Color.rgb(col, col, col));
+//                g.fillRect(j, i, 1, 1);
+//            }
+//        }
     }
     public void parseGradientVectors() {
         GraphicsContext g = canvas.getGraphicsContext2D();
@@ -131,12 +147,12 @@ public class main extends Application {
     public int getColor(double scale) {
         scale += 1.0;
         scale /= 2.0;
-        return (int)Math.round(255.0*scale);
+        return (int)(255.0*scale);
     }
 
     public int[] calcPoints() {
         int calcs = 360;
-        initTable();
+        //initTable();
         List<Integer> list = new ArrayList();
         for(int i = 0; i < calcs; i++) {
 

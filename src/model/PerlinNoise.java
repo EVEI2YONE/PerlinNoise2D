@@ -1,80 +1,106 @@
 package model;
 
-import java.util.Random;
-
 public class PerlinNoise {
-    static Random rand = new Random(1);
+    private int
+        width = 700,
+        height = 550;
+    private int
+        wgrids = 32,
+        hgrids = 32;
+    private int
+        wDim,// = width/wgrids,
+        hDim;// = height/hgrids;
 
-    public GradientPoint topleft, topright, bottomleft, bottomright;
+    private PerlinNoiseGrid[][] table;
 
     public PerlinNoise() {
+        wDim = width/wgrids;
+        hDim = height/hgrids;
         init();
     }
-    public void genGradientVectors() {
-        topleft = new GradientPoint();
-        topright = new GradientPoint();
-        bottomleft = new GradientPoint();
-        bottomright = new GradientPoint();
+
+    public void generateNoise() {
+        init();
+    }
+    public void setDimension(int width, int height) {
+        this.width = width;
+        this.height = height;
+        wDim = width/wgrids;
+        hDim = height/hgrids;
+        init();
+    }
+    public void setGridDimension(int wGrids, int hGrids) {
+        wgrids = wGrids;
+        hgrids = hGrids;
+        wDim = width/wgrids;
+        hDim = height/wgrids;
+        init();
+    }
+    private void init() {
+        initTable();
+        createGrid();
+        checkConnections();
     }
 
-    public void init() {
-        genGradientVectors();
-        setupGradientPoints();
-        setupGradientVectors();
+    private void initTable() {
+        int wOff = 0, hOff = 0;
+        if(height % hDim > 0)
+            hOff = 1;
+        if(width % wDim > 0)
+            wOff = 1;
+        table = new PerlinNoiseGrid[height/hDim + hOff][width/wDim + wOff];
+        xgridlen = width/(table[0].length-wOff);
+        ygridlen = height/(table.length-hOff);
     }
-    //Gradient points are from 0 to 1 for x and y
-    public void setupGradientPoints() {
-        topleft.loc = new Point(0, 0);
-        topright.loc = new Point(1, 0);
-        bottomleft.loc = new Point(0, 1);
-        bottomright.loc = new Point(1, 1);
+    private void createGrid() {
+        //initialize tables
+        for(int i = 0; i < table.length; i++) {
+            for(int j = 0 ; j < table[0].length; j++) {
+                table[i][j] = new PerlinNoiseGrid();
+            }
+        }
     }
-    public void setupGradientVectors() {
-        topleft.gradPoint = newPoint();
-        topright.gradPoint = newPoint();
-        bottomleft.gradPoint = newPoint();
-        bottomright.gradPoint = newPoint();
-    }
-
-    public double noise(double y, double x) {
-         double
-             d0x = x,
-             d0y = y,
-             d1x = x-1,
-             d1y = y,
-             d2x = x,
-             d2y = y-1,
-             d3x = x-1,
-             d3y = y-1;
-         double
-             a = dot(topleft.gradPoint.x, topleft.gradPoint.y, d0x, d0y),
-             b = dot(topright.gradPoint.x, topright.gradPoint.y, d1x, d1y),
-             c = dot(bottomleft.gradPoint.x, bottomleft.gradPoint.y, d2x, d2y),
-             d = dot(bottomright.gradPoint.x, bottomright.gradPoint.y, d3x, d3y);
-         double
-             ab = interpolate(a, b, x),
-             cd = interpolate(c, d, x),
-             z = interpolate(ab, cd, y);
-         return z;
+    private void checkConnections() {
+        //check connections
+        for(int i = 0; i < table.length; i++) {
+            for(int j = 0 ; j < table[0].length; j++) {
+                if(j > 0) { //update to left neighbor's gridpoint
+                    table[i][j].topleft = table[i][j-1].topright;
+                    table[i][j].bottomleft = table[i][j-1].bottomright;
+                }
+                if(i > 0) {
+                    table[i][j].topleft = table[i-1][j].bottomleft;
+                    table[i][j].topright = table[i-1][j].bottomright;
+                }
+            }
+        }
     }
 
-    public double interpolate(double start, double end, double ratio) {
-        return start + ratio*(end-start);
-    }
-    public double dot(double x1, double y1, double x2, double y2) {
-        return x1*x2 + y1*y2;
+    private double xgridlen;// = cols/table[0].length;
+    private double ygridlen;// = rows/table.length;
+
+    public double noise(int i, int j) {
+        int xgrid = getxgrid(j);
+        int ygrid = getygrid(i);
+        double x = getx(j);
+        double y = gety(i);
+        return (table[ygrid][xgrid].noise(y, x) + 1.0) / 2.0;
     }
 
-    public Point newPoint() {
-        double angle = rand.nextDouble()*2.0*Math.PI;
-        double x = Math.cos(angle);
-        double y = Math.sin(angle);
-        //return new Point(x, y);
-        return new Point(choose(), choose());
+    private double getx(int j) {
+        if(xgridlen-1 <= 0)
+            return 0;
+        return ((j)%xgridlen)/(xgridlen-1);
     }
-
-    double[] opt = {1, -1};
-    public double choose() {
-        return opt[rand.nextInt(2)];
+    private double gety(int i) {
+        if(ygridlen-1 <= 0)
+            return 0;
+        return ((i)%ygridlen)/(ygridlen-1);
+    }
+    private int getxgrid(int j) {
+        return (int)((j)/xgridlen);
+    }
+    private int getygrid(int i) {
+        return (int)((i)/ygridlen);
     }
 }
