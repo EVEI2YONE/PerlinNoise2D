@@ -17,7 +17,7 @@
        <p>perlin.setGridDimension(gridWidth, gridHeight);<br></p>
 <b>
 5. Call noise funciton to get a value from 0.0 to 1.0:</b>
-       <p>double scale = perlin.noise(i, j);<br></p>
+       <p>double scale = perlin.noise(i, j); //where i and j follow basic array parsing (top to bottom and left to right)<br></p>
 <b>
 6. Call generate to create new perlin grid with same dimensions:</b>
        <p>perlin.generateNoise();<br></p>
