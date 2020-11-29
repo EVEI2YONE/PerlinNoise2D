@@ -39,6 +39,7 @@ public class PerlinNoiseGrid {
         bottomright.gradPoint = newPoint();
     }
 
+    //x and y are ratios from 0.0 to 1.0 for the perlin grid
     public double noise(double y, double x) {
          double
              d0x = x,
