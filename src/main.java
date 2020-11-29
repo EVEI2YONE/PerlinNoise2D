@@ -7,7 +7,9 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import model.GradientPoint;
 import model.PerlinNoise;
+import model.Point;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,7 @@ public class main extends Application {
         height = 450;
     int
         wDim = width/(width/100),
-        hDim = height/(height/100);
+        hDim = height/(height/150);
     PerlinNoise[][] table;// = new PerlinNoise[rows/rDim][cols/cDim];
     @Override
     public void start(Stage stage) throws Exception {
@@ -28,9 +30,10 @@ public class main extends Application {
         initTable();
         b.setOnAction(e -> {
             Platform.runLater(() -> {
-                run();
                 createGrid();
                 checkConnections();
+                run();
+                parseGradientVectors();
             });
         });
         root.getChildren().addAll(b, canvas);
@@ -48,9 +51,6 @@ public class main extends Application {
         table = new PerlinNoise[height/hDim + hOff][width/wDim + wOff];
         xgridlen = width/(table[0].length-wOff);
         ygridlen = height/(table.length-hOff);
-
-        createGrid();
-        checkConnections();
     }
 
     public void createGrid() {
@@ -61,7 +61,6 @@ public class main extends Application {
             }
         }
     }
-
     public void checkConnections() {
         //check connections
         for(int i = 0; i < table.length; i++) {
@@ -100,11 +99,39 @@ public class main extends Application {
             }
         }
     }
+    public void parseGradientVectors() {
+        GraphicsContext g = canvas.getGraphicsContext2D();
+        g.setFill(Color.BLUE);
+        int r = 2;
+        for(int i = 0; i < table.length; i++) {
+            for(int j = 0; j < table[i].length; j++) {
+                int x = (int)Math.round(xgridlen) * j;
+                int y = (int)Math.round(ygridlen) * i;
+                g.fillOval(x-r, y-r, r*2, r*2);
+                displayGradientVectors(x, y, i, j);
+
+            }
+        }
+    }
+    public void displayGradientVectors(int x, int y, int i, int j) {
+        GradientPoint topleft = table[i][j].topleft;
+        GradientPoint topright = table[i][j].topleft;
+        GradientPoint bottomleft = table[i][j].topleft;
+        GradientPoint bottomright = table[i][j].topleft;
+
+        int r = 10;
+        GraphicsContext g = canvas.getGraphicsContext2D();
+        g.setStroke(Color.RED);
+        g.strokeLine(x, y, r*topleft.gradPoint.x+x, r*topleft.gradPoint.y+y);
+        g.strokeLine(x, y, r*topright.gradPoint.x+x, r*topright.gradPoint.y+y);
+        g.strokeLine(x, y, r*bottomleft.gradPoint.x+x, r*bottomleft.gradPoint.y+y);
+        g.strokeLine(x, y, r*bottomright.gradPoint.x+x, r*bottomright.gradPoint.y+y);
+    }
 
     public int getColor(double scale) {
-        scale += 1;
-        return (int)Math.round(255.0/2.0*scale);
-        //return rand.nextInt(255);
+        scale += 1.0;
+        scale /= 2.0;
+        return (int)Math.round(255.0*scale);
     }
 
     public int[] calcPoints() {

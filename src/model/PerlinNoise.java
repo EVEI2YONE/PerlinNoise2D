@@ -10,12 +10,15 @@ public class PerlinNoise {
     public PerlinNoise() {
         init();
     }
-    public void init() {
+    public void genGradientVectors() {
         topleft = new GradientPoint();
         topright = new GradientPoint();
         bottomleft = new GradientPoint();
         bottomright = new GradientPoint();
+    }
 
+    public void init() {
+        genGradientVectors();
         setupGradientPoints();
         setupGradientVectors();
     }
@@ -66,8 +69,8 @@ public class PerlinNoise {
         double angle = rand.nextDouble()*2.0*Math.PI;
         double x = Math.cos(angle);
         double y = Math.sin(angle);
-        return new Point(x, y);
-        //return new Point(choose(), choose());
+        //return new Point(x, y);
+        return new Point(choose(), choose());
     }
 
     double[] opt = {1, -1};
