@@ -3,7 +3,7 @@ package model;
 import java.util.Random;
 
 public class PerlinNoise {
-    Random rand;
+    static Random rand = new Random(1);
 
     public GradientPoint topleft, topright, bottomleft, bottomright;
 
@@ -16,7 +16,6 @@ public class PerlinNoise {
         bottomleft = new GradientPoint();
         bottomright = new GradientPoint();
 
-        rand = new Random();
         setupGradientPoints();
         setupGradientVectors();
     }
@@ -53,20 +52,26 @@ public class PerlinNoise {
              ab = interpolate(a, b, x),
              cd = interpolate(c, d, x),
              z = interpolate(ab, cd, y);
-         return z < -1 ? -.99 : z > .99 ? .99-Math.abs(.99-z) : z;
+         return z;
     }
 
-    public double interpolate(double start, double end, double val) {
-        return start + val*(end-start);
+    public double interpolate(double start, double end, double ratio) {
+        return start + ratio*(end-start);
     }
     public double dot(double x1, double y1, double x2, double y2) {
         return x1*x2 + y1*y2;
     }
 
     public Point newPoint() {
-        double angle = rand.nextDouble()*360;
+        double angle = rand.nextDouble()*2.0*Math.PI;
         double x = Math.cos(angle);
         double y = Math.sin(angle);
         return new Point(x, y);
+        //return new Point(choose(), choose());
+    }
+
+    double[] opt = {1, -1};
+    public double choose() {
+        return opt[rand.nextInt(2)];
     }
 }

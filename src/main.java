@@ -14,17 +14,17 @@ import java.util.List;
 import java.util.Random;
 
 public class main extends Application {
-    int rows = 600,
-        cols = 450;
-    int rDim = rows/10,
-        cDim = cols/10;
+    int width = 600,
+        height = 450;
+    int
+        wDim = width/(width/100),
+        hDim = height/(height/100);
     PerlinNoise[][] table;// = new PerlinNoise[rows/rDim][cols/cDim];
-    Random rand = new Random();
     @Override
     public void start(Stage stage) throws Exception {
         VBox root = new VBox();
         Button b = new Button("run");
-        canvas = new Canvas(rows, cols);
+        canvas = new Canvas(width, height);
         initTable();
         b.setOnAction(e -> {
             Platform.runLater(() -> {
@@ -40,9 +40,14 @@ public class main extends Application {
         stage.show();
     }
     public void initTable() {
-        table = new PerlinNoise[rows/rDim][cols/cDim];
-        xgridlen = cols/table[0].length;
-        ygridlen = rows/table.length;
+        int wOff = 0, hOff = 0;
+        if(height % hDim > 0)
+            hOff = 1;
+        if(width % wDim > 0)
+            wOff = 1;
+        table = new PerlinNoise[height/hDim + hOff][width/wDim + wOff];
+        xgridlen = width/(table[0].length-wOff);
+        ygridlen = height/(table.length-hOff);
 
         createGrid();
         checkConnections();
@@ -82,12 +87,16 @@ public class main extends Application {
         g.setStroke(Color.BLACK);
 
         int xgrid, ygrid;
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0; j < cols; j++) {
-                double scl = table[getygrid(i)][getxgrid(j)].noise(gety(i), getx(j));
+        for(int i = 0; i < height; i++) {
+            for(int j = 0; j < width; j++) {
+                xgrid = getxgrid(j);
+                ygrid = getygrid(i);
+                double x = getx(j);
+                double y = gety(i);
+                double scl = table[ygrid][xgrid].noise(y, x);
                 int col = getColor(scl);
                 g.setFill(Color.rgb(col, col, col));
-                g.fillRect(i, j, 1, 1);
+                g.fillRect(j, i, 1, 1);
             }
         }
     }
@@ -114,16 +123,20 @@ public class main extends Application {
     }
 
     public double getx(int j) {
-        return ((j-(j/xgridlen))%xgridlen)/xgridlen;
+        if(xgridlen-1 <= 0)
+            return 0;
+        return ((j)%xgridlen)/(xgridlen-1);
     }
     public double gety(int i) {
-        return ((i-(i/ygridlen))%ygridlen)/ygridlen;
+        if(ygridlen-1 <= 0)
+            return 0;
+        return ((i)%ygridlen)/(ygridlen-1);
     }
     public int getxgrid(int j) {
-        return (int)((j-(j/xgridlen))/xgridlen);
+        return (int)((j)/xgridlen);
     }
     public int getygrid(int i) {
-        return (int)((i-(i/ygridlen))/ygridlen);
+        return (int)((i)/ygridlen);
     }
 
     public static void main(String[] args) {
