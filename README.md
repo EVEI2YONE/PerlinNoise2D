@@ -4,7 +4,7 @@
 <h3>Jar location: out/artifacts/basic_perlin/basic_perlin.jar</h3>
 <h3>How to use</h3>
 <b>
-1. Create new Perlin Noise object:</b>
+1. Create new Perlin Noise instance:</b>
        <p>PerlinNoise perlin = new PerlinNoise();<br></p>
 <b>
 2. Set gradient type:</b>
