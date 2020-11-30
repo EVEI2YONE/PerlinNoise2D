@@ -22,7 +22,8 @@
 6. Call noise funciton to get a value from 0.0 to 1.0:</b>
        <p>double scale = perlin.noise(i, j); //where i and j follow basic array parsing (top to bottom and left to right)<br></p>
 <b>
-6. Call generate to create new perlin grid with same dimensions:</b>
+7. Call generate to create new perlin grid with same dimensions:</b>
        <p>perlin.generateNoise();<br></p>
 <p>Note 1: perlin has default dimension at 1000x1000 for 32x32 total grids and RANDOM gradient type. Each grid is (width/32) x (height/32) dimensions</p>
-<p>Note 2: slight artifacting remains, but disappears with 64 x 64 perlin grids</p>
+<p>Note 2: grids can be adjusted to suit customization.</p>
+<p>Note 3: slight artifacting remains, but disappears with 64 x 64 perlin grids</p>
