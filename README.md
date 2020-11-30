@@ -14,12 +14,15 @@
        <p>perlin.setDimension(width, height);<br></p>
 <b>
 4. Set total perlin grids within set dimensions (i.e. 32 x 32 grid in your canvas:</b>
-       <p>perlin.setGridDimension(gridWidth, gridHeight);<br></p>
+       <p>perlin.setGrids(gridsAlongWidth, gridsAlongHeight);<br></p>
 <b>
-5. Call noise funciton to get a value from 0.0 to 1.0:</b>
+5. Set dimensions for each grid (4x4 grid dimension - not the same as total grids):</b>
+       <p>perlin.setGridDimensions(gridWidth, gridHeight);<br></p>
+<b>
+6. Call noise funciton to get a value from 0.0 to 1.0:</b>
        <p>double scale = perlin.noise(i, j); //where i and j follow basic array parsing (top to bottom and left to right)<br></p>
 <b>
 6. Call generate to create new perlin grid with same dimensions:</b>
        <p>perlin.generateNoise();<br></p>
-<p>Note 1: perlin has default dimension at 1000x1000 for 32x32 total grids and RANDOM gradient type</p>
+<p>Note 1: perlin has default dimension at 1000x1000 for 32x32 total grids and RANDOM gradient type. Each grid is (width/32) x (height/32) dimensions</p>
 <p>Note 2: slight artifacting remains, but disappears with 64 x 64 perlin grids</p>
