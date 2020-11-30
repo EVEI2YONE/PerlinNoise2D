@@ -11,11 +11,11 @@ public class PerlinNoise {
         width = 1000,
         height = 1000;
     private int
-        wgrids = 32,
-        hgrids = 32;
+        wgrids = 64,
+        hgrids = 64;
     private int
-        wDim,// = width/wgrids,
-        hDim;// = height/hgrids;
+        wDim,
+        hDim;
 
     private PerlinNoiseGrid[][] table;
 
@@ -35,12 +35,22 @@ public class PerlinNoise {
         hDim = height/hgrids;
         init();
     }
-    public void setGridDimension(int wGrids, int hGrids) {
+    public void setGrids(int wGrids, int hGrids) {
         wgrids = wGrids;
         hgrids = hGrids;
         wDim = width/wgrids;
-        hDim = height/wgrids;
+        hDim = height/hgrids;
         init();
+    }
+    public void setGridDimension(int wlen, int hlen) {
+        int wOff = 0, hOff = 0;
+        if(width % wlen > 0)
+            wOff = 1;
+        if(height % hlen > 0)
+            hOff = 1;
+        int gridsAcrossWidth = (width/wlen) + wOff;
+        int gridsAcrossHeight = (height/hlen) + hOff;
+        setGrids(gridsAcrossWidth, gridsAcrossHeight);
     }
     private void init() {
         initTable();
