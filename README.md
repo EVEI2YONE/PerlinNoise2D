@@ -13,7 +13,7 @@
 3. Set canvas dimensions:</b>
        <p>perlin.setDimension(width, height);<br></p>
 <b>
-4. Set total perlin grids within set dimensions (i.e. 32 x 32 grid in your canvas:</b>
+4. Set total perlin grids within set canvas dimensions (i.e. 32 x 32 total grids) in your canvas:</b>
        <p>perlin.setGrids(gridsAlongWidth, gridsAlongHeight);<br></p>
 <b>
 5. Set dimensions for each grid (4x4 grid dimension - not the same as total grids):</b>
