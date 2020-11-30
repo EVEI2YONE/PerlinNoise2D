@@ -19,7 +19,7 @@
 4b. Set dimensions for each grid (4x4 grid dimension - not the same as total grids):</b>
        <p>perlin.setGridDimensions(gridWidth, gridHeight);<br></p>
 <b>
-5. Call noise funciton to get a value from 0.0 to 1.0:</b>
+5. Call noise function to get a value from 0.0 to 1.0:</b>
        <p>double scale = perlin.noise(i, j); //where i and j follow basic array parsing (top to bottom and left to right)<br></p>
 <b>
 6. Call generate to create new perlin grid with same dimensions:</b>
