@@ -30,4 +30,4 @@
 
 <h2>Example with importing jar library</h2>
 <img src="images/2d_land_generation.png">
-<p>Created multiple Perlin objects at varying dimensions and averaged values to get current land generated. Granted, this could also be done with just a single Perlin object.</p>
+<p>Created multiple Perlin objects at varying dimensions and averaged values to get current land generated. Granted, this could also be done with just a single Perlin object. Estimated time to create this new land generation project: 1 hour.</p>
