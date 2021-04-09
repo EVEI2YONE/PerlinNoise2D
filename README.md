@@ -27,3 +27,7 @@
 <p>Note 1: perlin has default dimension at 1000x1000 for 32x32 total grids and RANDOM gradient type. Each grid is (width/32) x (height/32) dimensions</p>
 <p>Note 2: grids can be adjusted to suit customization. So each individual calls to 4a or 4b will recreate the perlin grid for calculations and override each other.</p>
 <p>Note 3: slight artifacting remains, but disappears with 64 x 64 perlin grids</p>
+
+<h2>Example with importing jar library</h2>
+<img src="images/2d_land_generation.png">
+<p>Created multiple Perlin objects at varying dimensions and averaged values to get current land generated. Granted, this could also be done with just a single Perlin object.</p>
